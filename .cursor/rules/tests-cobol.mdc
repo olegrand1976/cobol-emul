@@ -1,0 +1,12 @@
+---
+description: Conventions des tests unitaires COBOL (tests/)
+globs: "tests/**/*.cob"
+alwaysApply: false
+---
+
+# Tests
+
+- Nommage : **`TEST-<SUJET>.cob`** → exécutable **`build/TEST-<SUJET>`** ; `run-tests.sh` lance tout `build/TEST-*` exécutable.
+- Les tests doivent **charger les `.so`** des modules : compiler via le **Makefile** (`make test`), pas `cobc` manuel isolé sans `-L`/deps.
+- Sortie : compteurs **OK/KO** en `DISPLAY`, **`RETURN-CODE`** 0 si succès, 1 si échec (pattern existant dans `TEST-VALID`, `TEST-COMPTE-IO`).
+- Données : `run-tests.sh` peut supprimer `data/COMPTES.dat` avant certains tests — ne pas dépendre d’un ordre implicite sans documenter.

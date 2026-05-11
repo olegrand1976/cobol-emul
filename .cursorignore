@@ -1,0 +1,6 @@
+# Réduit le bruit dans l'index Cursor (générés / binaires / données runtime)
+build/
+**/*.so
+**/*.o
+data/*.dat
+.env.stack

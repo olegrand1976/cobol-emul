@@ -1,0 +1,11 @@
+---
+description: Makefile — cibles et COBFLAGS du projet
+globs: "Makefile"
+alwaysApply: false
+---
+
+# Makefile
+
+- Cibles : **`all`** (défaut) → modules + sous-programmes + `MAIN` ; **`test`** → compile `tests/TEST-*.cob` puis `run-tests.sh` ; **`run`**, **`debug`**, **`clean`**, **`reset`**, **`help`**.
+- **`COBFLAGS`** par défaut : `-free -std=mf -Wall -debug` — surcharger en ligne : `make COBFLAGS='...'` pour expérimenter.
+- Ajouter une règle Make **seulement** si le Makefile ne couvre pas un nouveau répertoire (actuellement `src/modules`, `src/programs`, `tests`).

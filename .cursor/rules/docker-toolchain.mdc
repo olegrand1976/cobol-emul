@@ -1,0 +1,12 @@
+---
+description: Docker, Make et validation — toujours aligner le conteneur cobol
+alwaysApply: true
+---
+
+# Toolchain Docker
+
+- La **source de vérité** pour compiler et tester est le service **`cobol`** (`docker-compose.yml`) : répertoire monté en `/workspace`.
+- Proposer **`docker compose run --rm cobol`** suivi de `make …` plutôt qu’un `cobc` sur l’hôte si GnuCOBOL n’y est pas installé.
+- Variables runtime : **`COB_LIBRARY_PATH`** pointe vers `build/` (exporté par le `Makefile` lors des cibles `make`/`make test`).
+- Ne pas versionner **`build/`**, **`data/*.dat`** ni **`.env.stack`** (voir `.gitignore`).
+- Après modification de `Dockerfile` ou `docker-compose.yml` : **`docker compose build cobol`** si nécessaire.

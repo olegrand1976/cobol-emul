@@ -1,0 +1,14 @@
+services:
+  cobol:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+    image: cobol-emul:latest
+    container_name: cobol-emul
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+    tty: true
+    stdin_open: true
+    environment:
+      - TERM=xterm-256color

@@ -1,0 +1,11 @@
+---
+description: Copybooks (.cpy) — alignement avec modules et PIC
+globs: "**/*.cpy"
+alwaysApply: false
+---
+
+# Copybooks
+
+- Un **seul `01` principal** par fichier métier sauf composition volontaire.
+- Toute modification de longueur d’enregistrement fichier : **aligner** `FD` dans le module `-IO` concerné et migrer/retester les données (`make reset` si bac à sable).
+- Préfixer les champs par un préfixe cohérent (`W-CPT-*`, `W-POL-*`, etc.) pour éviter collisions dans les `COPY` multiples dans un même programme.

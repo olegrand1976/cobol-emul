@@ -1,0 +1,14 @@
+#----------------------------------------------------------------------
+# Configuration Hercules minimale (Hercules 3.x)
+# Le device 3270 permet la console / TN3270 sur le port 3270 du conteneur.
+# Pour MVS + JCL : ajoute des dasd (3390, etc.) et une image OS (ex. TK4-).
+#----------------------------------------------------------------------
+
+ARCHMODE z/Arch
+NUMCPU 1
+OSTAILOR z/OS
+
+0010    3270
+
+# Exemple de disque (à décommenter + fournir le fichier) :
+# 0A80    3390    /config/dasd/MVSRES.CKDT

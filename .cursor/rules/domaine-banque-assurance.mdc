@@ -1,0 +1,33 @@
+---
+description: Contexte métier bancaire et assurance (vocabulaire, périmètre, cohérence)
+alwaysApply: true
+---
+
+# Domaine métier — banque et assurance (cobol-emul)
+
+## Périmètre cible
+
+Ce dépôt sert d’**atelier COBOL** avec deux domaines **complémentaires** à modéliser progressivement :
+
+- **Banque** : comptes, mouvements, soldes, agrément réglementaire de surface (pas de vraie conformité PSD2/SEPA dans ce bac à sable).
+- **Assurance** (bancassurance simplifiée) : **police**, **prime**, **sinistre**, lien optionnel vers un **compte bancaire** pour prélèvement / indemnisation.
+
+## Vocabulaire commun
+
+| Concept | Banque | Assurance |
+|--------|--------|-----------|
+| Contrat | — | Police (numéro, produit, souscripteur, prime, statut) |
+| Encours | Solde compte | Cotisations dues / réserve sinistre |
+| Mouvement | Débit / crédit / commission | Prime encaissée, prestation versée |
+| Identité | Titulaire compte | Assuré principal / bénéficiaires (niveau simple) |
+
+## Règles de cohérence
+
+- Toute **nouvelle entité** assurance doit avoir un **identifiant stable** (ex. `PIC 9(10)` pour numéro de police) et un **statut** avec niveaux `88` (active, résiliée, en contentieux).
+- Un **lien banque–assurance** (prélèvement sur compte) doit **vérifier le compte** via la logique existante (`COMPTE-IO` / `VALID`) avant mouvement.
+- Préférer des **montants en `COMP-3`** et des **dates `AAAAMMJJ`** pour rester aligné avec le code actuel.
+
+## Hors périmètre (volontaire)
+
+- Pas d’interface graphique type AS/400 ; terminal `DISPLAY`/`ACCEPT` uniquement.
+- Pas de calcul actuariel solide : primes et capitaux restent **pédagogiques**.

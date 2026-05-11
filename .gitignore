@@ -1,0 +1,16 @@
+build/
+data/
+*.so
+*.o
+*.obj
+*.exe
+*.lst
+*.i.cob
+
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store
+
+.env.stack

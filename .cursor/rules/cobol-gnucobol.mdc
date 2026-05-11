@@ -1,0 +1,32 @@
+---
+description: Standards COBOL GnuCOBOL pour ce dépôt (MF, CALL dynamique, copybooks)
+globs: "**/*.cob"
+alwaysApply: false
+---
+
+# COBOL — cobol-emul
+
+## Compilateur et flags
+
+- Toujours **format libre** : compiler avec `cobc -free -std=mf -Wall` (+ `-debug` en dev).
+- Copybooks : répertoire `src/copybooks/` ; inclure via `COPY nom` et `-I src/copybooks` (déjà dans le Makefile).
+
+## Architecture du projet
+
+- **Modules** (`src/modules/`) : I/O fichiers (`COMPTE-IO`, `TRANS-IO`), validations (`VALID`). Compilés en **`.so`** (`cobc -m`), chargés par `CALL "NOM"` — la chaîne doit correspondre au `PROGRAM-ID` et à l’option `-o build/NOM.so`.
+- **Programmes applicatifs** (`src/programs/`) : même mécanisme `.so` sauf `MAIN.cob` compilé en exécutable (`cobc -x`).
+- **Linkage** : ne jamais passer un littéral plus court que la zone `LINKAGE` : utiliser le copybook **`OPS.cpy`** (`WS-OP PIC X(12)`) et `MOVE "OP" TO WS-OP` avant `CALL`.
+- **Codes retour** : réutiliser `COPY CODES-ERR` et les niveaux `88` (`RC-OK`, etc.).
+
+## Fichiers données
+
+- Comptes indexés : `data/COMPTES.dat` — logique dans `COMPTE-IO.cob` uniquement.
+- Transactions : `data/TRANS.dat` — via `TRANS-IO.cob`.
+
+## Checklist nouvelle fonctionnalité
+
+1. Copybooks si nouvelles structures métier.
+2. Module I/O si nouveau fichier persistant.
+3. Programme `src/programs/FOO.cob` avec `PROGRAM-ID. FOO.` ; sous-programmes : **`GOBACK`** ou **`EXIT PROGRAM`** ; terminer par **`END PROGRAM FOO.`** si tu utilises la forme explicite.
+4. Déclarer `CALL "FOO"` dans `MAIN.cob` + entrée menu + `Makefile` déjà couvre `src/programs/*.cob`.
+5. `make clean && make` puis `make test` ; ajouter un `tests/TEST-*.cob` si logique critique.
