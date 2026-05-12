@@ -1,6 +1,6 @@
 # Cours COBOL — Parcours complet avec explications détaillées
 
-Ce document accompagne le dépôt **cobol-emul** (GnuCOBOL en **format libre**, dialecte `**-std=mf`**, exécution dans **Docker**).
+Ce document accompagne le dépôt **cobol-emul** (GnuCOBOL en **format libre**, dialecte `**-std=mf`**, exécution dans **Docker**). Pour un **mode formateur** (pédagogie, exercices, progression) dans Cursor, active la règle **[`.cursor/rules/cobol-formateur-senior.mdc`](../.cursor/rules/cobol-formateur-senior.mdc)**.
 
 À la fin de **chaque leçon**, une section **« Travaux pratiques »** propose des **TP** avec **contexte métier** (banque / assurance), **résultat attendu** et **corrigé** (code ou fichiers dans `[exos/cours/tp/](../exos/cours/tp/)` et `[exos/cours/tp/corriges/](../exos/cours/tp/corriges/)`. Plusieurs TP sont des **maintenances** sur un programme **déjà faux** (bug **technique** ou **métier**) à diagnostiquer et corriger.
 
@@ -9,6 +9,7 @@ Ce document accompagne le dépôt **cobol-emul** (GnuCOBOL en **format libre**, 
 ## Table des matières
 
 1. [Contexte et environnement](#0-contexte-et-environnement)
+   - [Cartes perforées (histoire, 80 colonnes)](#cartes-perforees)
 2. [Anatomie d’un programme COBOL](#1-anatomie-dun-programme-cobol)
 3. [Leçon 1 — Premier programme](#2-leçon-1--premier-programme-01-hellocob)
 4. [Leçon 2 — Données et calculs](#3-leçon-2--données-et-calculs-02-calculcob)
@@ -21,6 +22,7 @@ Ce document accompagne le dépôt **cobol-emul** (GnuCOBOL en **format libre**, 
 11. [Leçon 9 — Vers la bancassurance (assurance)](#10-leçon-9--vers-la-bancassurance-assurance)
 12. [Synthèse et poursuite](#11-synthèse-et-poursuite)
 13. [Fichiers TP et corrigés (`exos/cours/tp/`)](#12-fichiers-tp-et-corrigés-exoscourstp)
+14. [Exemples complémentaires (INSPECT, STRING, INITIALIZE)](#14-exemples-complémentaires-inspect-string-initialize)
 
 ---
 
@@ -62,6 +64,23 @@ Tu arrives dans `/workspace` : c’est le dossier du projet monté par Docker.
 `-Wall` : active des avertissements utiles.  
 `-x` : produit un **exécutable**.  
 `-m` : produit un **module** (`.so`) pour `CALL "..."`.
+
+<a id="cartes-perforees"></a>
+
+### Cartes perforées (histoire du format 80 colonnes)
+
+Longtemps, le programme COBOL **physique** tenait sur des **cartes perforées** (carton dur, 80 colonnes par carte, norme IBM). Le **jeu de cartes** (« deck ») passait dans un **lecteur** ; chaque carte donnait **une ligne source** de **longueur fixe** au compilateur. Si le deck tombait par terre, les **numéros en colonnes 1–6** servaient à le remettre dans l’ordre.
+
+| Colonnes | Rôle usuel (souvenir pédagogique ; conventions ont varié selon sites) |
+|----------|------------------------------------------------------------------------|
+| **1–6** | Numéro de **séquence** (repérage du deck). |
+| **7** | **Continuation** de ligne (marqueur si l’instruction continue sur la carte suivante). |
+| **8–72** | **Zone programme** : autrefois on distinguait la marge **A** (noms de divisions / sections, vers les colonnes 8–11) et la marge **B** (instructions et données, à partir de ~12). |
+| **73–80** | **Identification** du lot ou de la version (commentaire technique / repère bibliothèque). |
+
+Une carte = **80 caractères maximum** : d’où la culture des **lignes courtes**, des **abréviations**, et du respect strict du **format fixe** (le compilateur « voyait » des colonnes, pas un flux libre).
+
+Aujourd’hui, avec **GnuCOBOL** et l’option **`-free`**, tu écris comme dans un langage moderne (lignes de longueur variable, commentaires `*>`). L’héritage utile à retenir : le COBOL « données » pense encore souvent en **champs de taille fixe** (`PIC X(80)` pour une ligne fichier, `PIC 9(8)` pour un numéro de compte, etc.) — l’équivalent logique de ce qui devait **tenir sur une carte** ou dans un **buffer** terminal 3270.
 
 ---
 
@@ -770,6 +789,7 @@ Le backlog d’idées est déjà listé dans `docs/BACKLOG-METIER.md`.
 - Contrôle de flux : `EVALUATE`, `PERFORM`.
 - Modularisation : `CALL`, `LINKAGE`, `GOBACK`.
 - Fichiers : **séquentiel** et **indexé** (bases).
+- Chaînes : `INSPECT`, `STRING`, `INITIALIZE` (voir [§14](#14-exemples-complémentaires-inspect-string-initialize)).
 
 ### Poursuite recommandée
 
@@ -789,6 +809,9 @@ cobc -free -std=mf -Wall -x -o build/L05 exos/cours/05-MAIN-CALL.cob
 cobc -free -std=mf -Wall -x -o build/L06 exos/cours/06-FICHIER-SEQ.cob
 mkdir -p data && rm -f data/COURS-PROD.dat
 cobc -free -std=mf -Wall -x -o build/L07 exos/cours/07-FICHIER-INDEX.cob
+cobc -free -std=mf -Wall -x -o build/L08 exos/cours/08-INSPECT-COMPTEURS.cob
+cobc -free -std=mf -Wall -x -o build/L09 exos/cours/09-STRING-CONCAT.cob
+cobc -free -std=mf -Wall -x -o build/L10 exos/cours/10-INITIALIZE.cob
 ```
 
 Puis :
@@ -798,6 +821,9 @@ Puis :
 COB_LIBRARY_PATH=build ./build/L05
 ./build/L06
 ./build/L07
+./build/L08
+./build/L09
+./build/L10
 ```
 
 ---
@@ -817,6 +843,32 @@ COB_LIBRARY_PATH=build ./build/L05
 
 
 Index local : `[exos/cours/tp/README.md](../exos/cours/tp/README.md)`.
+
+---
+
+## 14) Exemples complémentaires (INSPECT, STRING, INITIALIZE)
+
+Trois petits programmes **hors fil numéroté des leçons 1–7** pour compléter les compétences « chaînes de caractères » et « remise à zéro » souvent vues en **batch** bancaire.
+
+| Fichier | Idée pédagogique |
+|---------|------------------|
+| [`exos/cours/08-INSPECT-COMPTEURS.cob`](../exos/cours/08-INSPECT-COMPTEURS.cob) | `INSPECT ... TALLYING` (compter espaces ou un caractère) ; `REPLACING` avec **même longueur** des littéraux source et cible (sinon erreur de compilation). |
+| [`exos/cours/09-STRING-CONCAT.cob`](../exos/cours/09-STRING-CONCAT.cob) | `STRING ... DELIMITED BY SIZE ... INTO` pour fabriquer un **libellé** de mouvement à partir de morceaux (type / montant édité / devise). |
+| [`exos/cours/10-INITIALIZE.cob`](../exos/cours/10-INITIALIZE.cob) | `INITIALIZE` sur une zone groupe : remet les sous-zones à **zéro** ou **espaces** selon leur `PIC` (pratique avant réutilisation d’un buffer). |
+
+Compilation :
+
+```bash
+cobc -free -std=mf -Wall -x -o build/L08 exos/cours/08-INSPECT-COMPTEURS.cob && ./build/L08
+cobc -free -std=mf -Wall -x -o build/L09 exos/cours/09-STRING-CONCAT.cob && ./build/L09
+cobc -free -std=mf -Wall -x -o build/L10 exos/cours/10-INITIALIZE.cob && ./build/L10
+```
+
+#### TP complémentaire (facultatif) — INSPECT sur un RIB
+
+**Mission** : à partir d’une constante `PIC X(40)` contenant un faux RIB avec espaces, compter les **chiffres** `0`–`9` (boucle ou plusieurs `TALLYING` successifs) et afficher le total (indice : en COBOL classique on inspecte **caractère par caractère** ou on enchaîne dix `INSPECT ... FOR ALL '0'` etc.).
+
+**Variante** : remplacer une étiquette fixe par une autre **même longueur** (comme `REF-OP` → `REF_OP` dans l’exemple 08).
 
 ---
 

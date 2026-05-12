@@ -35,6 +35,7 @@ docker compose run --rm cobol bash -lc 'make clean && make && make test'
 
 | Fichier | Portée |
 |---------|--------|
+| `cobol-formateur-senior.mdc` | Optionnel — persona **formateur COBOL senior** (pédagogie, exercices) |
 | `cobol-gnucobol.mdc` | `*.cob` — CALL, `.so`, flags |
 | `cobol-copybooks.mdc` | `*.cpy` |
 | `domaine-banque-assurance.mdc` | Toujours — vocabulaire métier |

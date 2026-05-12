@@ -1,6 +1,6 @@
 # EXERCICES — Reprise en main de COBOL
 
-10 exercices progressifs, du « Hello World » à un test unitaire complet. Tous se compilent dans le conteneur (`docker compose run --rm cobol`).
+16 exercices progressifs, du « Hello World » à des scénarios proches du **batch** bancaire. Tous se compilent dans le conteneur (`docker compose run --rm cobol`).
 
 Pour un **cours structuré** avec explications détaillées leçon par leçon et exemples associés : [`docs/COURS-COBOL.md`](docs/COURS-COBOL.md) (programmes dans `exos/cours/`).
 
@@ -182,6 +182,62 @@ COB_LIBRARY_PATH=build ./build/MAIN08
 **Concepts** : pattern d'assertion, `RETURN-CODE`, intégration dans `make test`.
 
 Le run-tests.sh prendra automatiquement ton fichier puisqu'il s'appuie sur `build/TEST-*`.
+
+---
+
+## Exercice 11 — INSPECT TALLYING (contrôle de saisie)
+
+**Objectif** : dans une `PIC X(30)` saisie au clavier, compter combien de **lettres** `A` à `Z` (majuscules) apparaissent ; afficher le total (zéro si aucune).
+
+**Concepts** : `INSPECT ... TALLYING ... FOR ALL 'A'` enchaîné ou boucle `PERFORM` avec inspection d’un seul caractère à la fois via `WS-LIGNE(IX:1)`.
+
+**Résultat attendu** : pour `BANQUE-ABC` → au moins 3 majuscules détectées selon ta méthode.
+
+---
+
+## Exercice 12 — STRING pour construire une référence
+
+**Objectif** : concaténer **préfixe** `REF-`, un numéro sur 8 chiffres (avec zéros à gauche via `MOVE` vers `PIC ZZZZZZZ9` ou `9(8)`), tiret, **suffixe** `EUR`, dans une zone `PIC X(24)`.
+
+**Concepts** : `STRING ... DELIMITED BY SIZE`, `INTO` avec gestion du débordement (`OVERFLOW` si tu ajoutes la phrase).
+
+**Résultat attendu** : une seule ligne `DISPLAY` du type `[REF-00001234-EUR]` pour le compteur 1234.
+
+---
+
+## Exercice 13 — INITIALIZE puis réutilisation d’un buffer
+
+**Objectif** : déclarer une zone groupe `01 WS-BUFFER` avec un compte `PIC 9(8)`, un montant `PIC S9(7)V99`, un libellé `PIC X(20)`. Remplis-les, affiche, puis `INITIALIZE WS-BUFFER`, affiche à nouveau (tout à zéro / blanc).
+
+**Concepts** : `INITIALIZE`, distinction **NUMERIC** / **ALPHANUMERIC** (option `REPLACING` avancée en bonus).
+
+---
+
+## Exercice 14 — PERFORM THRU (factorisation)
+
+**Objectif** : écrire trois paragraphes `A-`, `B-`, `C-` qui affichent chacun une ligne ; enchaîne-les avec **`PERFORM A-THRU C-`** depuis `MAIN-LOGIC`.
+
+**Concepts** : étendue de `PERFORM`, nommage des sections (style maintenance).
+
+**Résultat attendu** : trois lignes dans l’ordre, sans dupliquer trois `PERFORM` séparés.
+
+---
+
+## Exercice 15 — REDEFINES (même octets, deux lectures)
+
+**Objectif** : une zone `PIC X(8)` contient `12345678` (caractères). Déclare un `01` groupe avec `REDEFINES` : une vue `PIC X(8)` et une vue `PIC 9(8)` ; `MOVE` la chaîne dans la vue caractère puis `DISPLAY` la vue numérique (comportement selon compilateur : note la conversion implicite ou les espaces).
+
+**Concepts** : `REDEFINES`, alignement mémoire, pièges de **superposition** (ne jamais activer les deux vues en écriture concurrente sans discipline).
+
+---
+
+## Exercice 16 — Date « système » (AAAAMMJJ)
+
+**Objectif** : récupérer la date du jour en `PIC 9(8)` au format **AAAAMMJJ** avec `MOVE FUNCTION CURRENT-DATE (1:8) TO WS-DATE-J` puis l’afficher avec un libellé du type « Reprise batch du » immédiatement suivi de la date (sans espace superflu si tu veux coller au format ISO).
+
+**Concepts** : `FUNCTION CURRENT-DATE` (chaîne longue ; extraire les 8 premiers caractères pour la date calendaire).
+
+**Résultat attendu** : une ligne du type `Reprise batch du 20260511` (la valeur jour dépend de l’exécution).
 
 ---
 

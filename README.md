@@ -22,7 +22,7 @@ Le dépôt inclut une config **éditeur** alignée sur la toolchain Docker :
 | Élément | Rôle |
 |---------|------|
 | [`AGENTS.md`](AGENTS.md) | Instructions pour l’agent IA (validation, cartographie, règles). |
-| [`.cursor/rules/*.mdc`](.cursor/rules/) | Règles **COBOL**, **copybooks**, **Docker/Make**, **tests**, **métier** banque/assurance. |
+| [`.cursor/rules/*.mdc`](.cursor/rules/) | Règles **COBOL**, **copybooks**, **Docker/Make**, **tests**, **métier** banque/assurance ; option **formateur** : [`cobol-formateur-senior.mdc`](.cursor/rules/cobol-formateur-senior.mdc). |
 | [`.cursorignore`](.cursorignore) | Exclut `build/`, binaires et `data/*.dat` de l’index (moins de bruit). |
 | [`.vscode/tasks.json`](.vscode/tasks.json) | **COBOL: make (Docker)** = `clean && make` ; **COBOL: make incrémental (Docker)** = `make` seul (plus rapide au quotidien) ; **test**, **make+test** ; raccourci build (**Ctrl+Shift+B** = tâche de build par défaut = clean+make). |
 | [`.vscode/extensions.json`](.vscode/extensions.json) | Extensions suggérées : COBOL (Bitlang), Makefile Tools. |
@@ -69,7 +69,7 @@ cobol-emul/
 ├── tests/                 TEST-*.cob + run-tests.sh
 ├── data/                  Fichiers indexés/séquentiels au runtime (auto-créé)
 ├── build/                 Binaires compilés (.so + executables) (auto-créé)
-├── EXERCICES.md           10 exercices progressifs guidés
+├── EXERCICES.md           16 exercices progressifs guidés
 ├── docs/
 │   ├── COURS-COBOL.md       Cours complet (leçons 1–9 + exemples exos/cours/)
 │   ├── GUIDE-EXTENSION.md Comment ajouter une fonctionnalité
@@ -189,7 +189,7 @@ Port SQL par défaut : **50000** (variable `COBOL_EMUL_DB2_PORT`). Pour du **COB
 
 ## 7. Workflow recommandé pour apprendre
 
-1. Lis `EXERCICES.md` et fais les **10 exercices progressifs** dans l'ordre.
+1. Lis `EXERCICES.md` et fais les **16 exercices progressifs** dans l'ordre.
 2. Reprends ensuite `src/programs/CREER.cob` et expérimente : ajoute un champ "email" au compte, propage-le dans le copybook, dans `COMPTE-IO`, dans `LISTER`.
 3. Active la verbosité du compilateur : `make COBFLAGS='-free -std=mf -Wall -Wextra -debug'`.
 4. Pour debugger un crash en runtime : `make debug` ou `cobc -free -std=mf -x -g -fdebugging-line src/programs/MAIN.cob -o build/MAIN && gdb build/MAIN`.

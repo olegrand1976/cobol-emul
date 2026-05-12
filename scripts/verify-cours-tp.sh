@@ -56,6 +56,14 @@ TMPLOG="$(mktemp)"
 ./build/L07 >"${TMPLOG}" 2>&1
 grep -q "30003" "${TMPLOG}" && echo "  L07_OK"
 
+echo "=== Cours L08-L10 (complement) ==="
+run_cob -x -o build/L08 exos/cours/08-INSPECT-COMPTEURS.cob
+./build/L08 | grep -q "INSPECT" && echo "  L08_OK"
+run_cob -x -o build/L09 exos/cours/09-STRING-CONCAT.cob
+./build/L09 | grep -q "1250.50" && echo "  L09_OK"
+run_cob -x -o build/L10 exos/cours/10-INITIALIZE.cob
+./build/L10 | grep -q "INITIALIZE" && echo "  L10_OK"
+
 echo "=== Projet : make test ==="
 make clean >/dev/null
 make >/dev/null
