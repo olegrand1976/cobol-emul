@@ -1,5 +1,9 @@
 # Composants optionnels — stack étendue (profiles Docker Compose v2)
 #
+# Sécurité : les valeurs par défaut ${…:-changeme} et ${…:-db2changeme} sont des repli
+# DEV LOCAL uniquement. Pour toute machine joignable sur le réseau, définir des secrets
+# forts dans .env.stack (non versionné) : COBOL_EMUL_VSCODE_PASSWORD, COBOL_EMUL_DB2_PASSWORD.
+#
 # Exemples :
 #
 #   IDE web (VS Code dans le navigateur) :

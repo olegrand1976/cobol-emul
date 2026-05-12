@@ -13,5 +13,5 @@ Le dépôt se centre sur **GnuCOBOL** + fichiers **ISAM** dans Docker (`docker-c
 Fichiers utiles :
 
 - [`docker-compose.stack.yml`](../docker-compose.stack.yml) — services optionnels.
-- [`.env.stack.example`](../.env.stack.example) — variables (copier en `.env.stack`).
+- [`.env.stack.example`](../.env.stack.example) — variables non sensibles (copier en `.env.stack` ; mots de passe uniquement en local, voir [SECURITY.md](../SECURITY.md)).
 - [`hercules/`](hercules/) — `hercules.cnf` + guide TK4-/JCL.

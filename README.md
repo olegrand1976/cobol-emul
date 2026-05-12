@@ -113,7 +113,7 @@ cobol-emul/
 
 Ces briques complètent l'environnement GnuCOBOL pour coller à un parcours **mainframe** ou **SQL embarqué**. Elles sont **optionnelles** : fichier compose dédié + profiles.
 
-Vue d'ensemble : [`stack/README.md`](stack/README.md).
+Vue d'ensemble : [`stack/README.md`](stack/README.md). **Secrets** : voir [`SECURITY.md`](SECURITY.md) (`.env.stack` non versionné, pas de mots de passe dans `.env.stack.example`).
 
 ### 5.1 IDE web — code-server
 
@@ -121,7 +121,9 @@ Vue d'ensemble : [`stack/README.md`](stack/README.md).
 
 ```bash
 cp .env.stack.example .env.stack
-# Édite .env.stack : COBOL_EMUL_VSCODE_PASSWORD, etc.
+# Dans .env.stack (jamais commité) : ajoute COBOL_EMUL_VSCODE_PASSWORD et, si tu utilises Db2,
+# COBOL_EMUL_DB2_PASSWORD avec des secrets forts. Sans ces lignes, Compose utilise des défauts
+# dev local uniquement (voir SECURITY.md).
 
 docker compose -f docker-compose.yml -f docker-compose.stack.yml \
   --env-file .env.stack --profile ide up -d code-server
